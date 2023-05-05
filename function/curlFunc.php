@@ -1,10 +1,6 @@
 <?php
-function ($url) {
-    //Нужно добавить автоматизацию имени файла по урл и сохранение в папке темп. 
-
+function curlFunc($url) {
     $curl = curl_init();
-    // Указываем адрес страницы:
-    $url = 'https://kruchkov.com.ua/';
     // Указываем адрес страницы:
     curl_setopt($curl, CURLOPT_URL, $url);
     //сохранять в переменную
@@ -13,7 +9,12 @@ function ($url) {
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
     //cookie
-    $cookieFilePath = $_SERVER['DOCUMENT_ROOT'] . '/cookie.txt';
+    //Имя и путь к файлу
+    preg_match('#https://([a-z.-]+)#', $url, $matches);
+    $name = preg_replace('#\.#', "_", $matches[1]).".txt";
+    $path = '/temp/'.$name;
+    $cookieFilePath = $_SERVER['DOCUMENT_ROOT'] . $path;
+    echo $cookieFilePath;
     curl_setopt($curl, CURLOPT_COOKIEFILE, $cookieFilePath);
     curl_setopt($curl, CURLOPT_COOKIEJAR,  $cookieFilePath);
     //заголовка USERAGENT
