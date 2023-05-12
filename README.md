@@ -1,2 +1,2 @@
 # new-dumping
-parsing price
+parsing price12
