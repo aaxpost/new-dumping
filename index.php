@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Welcome to your_domain_1!</title>
+    <title>NEW-DUMPING WORK</title>
   </head>
   <body>
     <h1>Success! The new-dumping virtual host is working!</h1>
