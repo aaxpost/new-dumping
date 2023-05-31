@@ -14,7 +14,7 @@ function curlFunc($url) {
     $name = preg_replace('#\.#', "_", $matches[1]).".txt";
     $path = '/temp/'.$name;
     $cookieFilePath = $_SERVER['DOCUMENT_ROOT'] . $path;
-    echo $cookieFilePath;
+    //echo $cookieFilePath;
     curl_setopt($curl, CURLOPT_COOKIEFILE, $cookieFilePath);
     curl_setopt($curl, CURLOPT_COOKIEJAR,  $cookieFilePath);
     //заголовка USERAGENT
