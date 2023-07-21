@@ -39,11 +39,27 @@ var_dump($block);
 
 
 $document = new Document('page.html', true);
-var_dump($document);
-$block = $document->first('#block');
-$elem = $block->first('.elem');
+//var_dump($document);
+//Регулярная цена на проме
+$elem = $document->find('div.b-product-cost');
+$elem = $document->first('*[^data-=product_price]');
 echo $elem->text();
+//echo "<br>".$elem->text(); 
 
+
+//var_dump(htmlspecialchars($elem->attr('type')));
+/*
+$i = 0;
+foreach ($elem as $item) {
+  $arr[$i][] = $item->attr('href');
+  $arr[$i][] = $item->text();
+  $i = $i + 1;
+}
+var_dump($arr);
+echo '<pre>';
+echo var_export($arr);
+echo '</pre>';
+*/
 
 
 
