@@ -1,5 +1,7 @@
 <?php
 function curlFunc($url) {
+    //Пауза для неравномерных запросов
+    //sleep(rand(1, 7));
     $curl = curl_init();
     // Указываем адрес страницы:
     curl_setopt($curl, CURLOPT_URL, $url);

@@ -1,3 +1,13 @@
+API GS
+AIzaSyC1iJNUPx-RTkmMCFrgS8g7rrllztElTf4
+AIzaSyC1iJNUPx-RTkmMCFrgS8g7rrllztElTf4
+https://www.youtube.com/watch?v=zoufwxZjr0c
+
+api_key = AIzaSyC1iJNUPx-RTkmMCFrgS8g7rrllztElTf4
+client_id = 1047121742164-58l6gu40f7dll3glocgsgig0cg13d359.apps.googleusercontent.com
+client_secret = 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
+
+
 # new-dumping
 parsing price12
 
