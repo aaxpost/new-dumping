@@ -1,5 +1,11 @@
 <?php
-function gSheetInsert($elem) {
+function gSheetInsert($elems, $client) {
+    //Код записи данных в таблицу гугл шит
+    $service = new Google_Service_Sheets($client);
+    //id листа из урл
+    $spreadsheetId = "1owRwWJm_SCt18Xi3cMkxaamGLmC1xokYsUEdyHjE94M";
+    //Название вкладки листа
+    $range = "sheet_1"; // Sheet name
     unset($newArr);
     $newArr[] = $elems;
     $body = new Google_Service_Sheets_ValueRange([
@@ -23,3 +29,4 @@ function gSheetInsert($elem) {
     }
     */
 }
+

@@ -3,8 +3,7 @@
     <title>NEW-DUMPING</title>
   </head>
   <body>
-    <h1>Success! The new-dumping virtual host is working!</h1>
-    <h1>Success! First commit</h1>
+    <h1>NEW-DUMPING</h1>
   </body>
 </html>
 <?php
@@ -25,93 +24,29 @@ use Didom\Query;
 //Загрузка функций
 require ('function/curlFunc.php');
 require ('function/gSheetRead.php');
+require ('function/gSheetInsert.php');
 
-//Ниже код на удаление
-/*
-$url = 'https://dnepr-traktor.net/ua/p509617504-izmelchitel-vetok-pod.html';
-$siteFile = curlFunc($url);
-$siteDoc = new Document($siteFile);
-$elem = $siteDoc->find('.b-product-cost__price');
-$document = new Document('page.html', true);
-//var_dump($document);
-//Регулярная цена на проме Рабочий код
-$elem = $document->find('div.b-product-cost');
-$elem = $document->first('*[^data-=product_price]');
-echo $elem->text();
-*/
-//Выше код на удаление
-
+//Считываю данные для парсинга из базового листа
 $array = gSheetRead();
-//echo '<pre>';echo var_export($array);echo '</pre>';exit;
-
-//Код записи данных в таблицу гугл шит
-echo "test sheet";
+//Подготовка объекта для записи данных в лист
 require __DIR__ . '/vendor/autoload.php';
-
 $client = new \Google_Client();
 $client->setApplicationName('Google Sheets with Primo');
 $client->setScopes([\Google_Service_Sheets::SPREADSHEETS]);
 $client->setAccessType('offline');
 $client->setAuthConfig(__DIR__ . '/credentials.json');
 
-$service = new Google_Service_Sheets($client);
-//id листа из урл
-$spreadsheetId = "1owRwWJm_SCt18Xi3cMkxaamGLmC1xokYsUEdyHjE94M";
-//Название вкладки листа
-$range = "sheet_1"; // Sheet name
-
-//Массив, который вставится в строку таблицы
-$newArr[] = [date(DATE_RFC822), 'Назаренко'];
-//************************************** */
-$body = new Google_Service_Sheets_ValueRange([
-	'values' => $newArr
-]);
-$params = [
-	'valueInputOption' => 'RAW'
-];
-
-$result = $service->spreadsheets_values->append(
-	$spreadsheetId,
-	$range,
-	$body,
-	$params
-);
-
-if($result->updates->updatedRows == 1){
-	echo "Success";
-} else {
-	echo "Fail";
-}
-//exit;
-//***************************************
-//echo '<pre>';echo var_export($newArr);echo '</pre>';exit;
+//Первая строка, дата запроса и фамилия менеджера
+gSheetInsert([date(DATE_RFC822), 'Назаренко'], $client);
 
 foreach ($array as $key => $elems) {
   if ($key == 0) {
-    $elems[0] = $elems[0];
-    unset($newArr);
-    $newArr[] = $elems;
-    $body = new Google_Service_Sheets_ValueRange([
-      'values' => $newArr
-    ]);
-    $params = [
-      'valueInputOption' => 'RAW'
-    ];
-    
-    $result = $service->spreadsheets_values->append(
-      $spreadsheetId,
-      $range,
-      $body,
-      $params
-    );
-    
-    if($result->updates->updatedRows == 1){
-      echo "Success";
-    } else {
-      echo "Fail";
-    }
-  } else {
-    echo '1111';
+    //1 ROW Строка с артикулом и именем партнера или ссылкой на сайт
+    gSheetInsert($elems, $client);
+  }
+
+  if ($key != 0) {
+    //KRUCHKOV
     $url = $elems[1];
     //echo $url;exit;
     $document = new Document($url, true);
@@ -121,47 +56,85 @@ foreach ($array as $key => $elems) {
     if (empty($price)) {
       $elems[1] = 'error';
     } else {
-      $elems[1] = $price->text();
+      //$elems[1] = $price->text();
+      $elems[1] = 1000;
+      //PARTNER
+      $elems[2] = 2000;
     }
-    unset($newArr);
-    $newArr[] = $elems;
-    $body = new Google_Service_Sheets_ValueRange([
-      'values' => $newArr
-    ]);
-    $params = [
-      'valueInputOption' => 'RAW'
-    ];
-    
-    $result = $service->spreadsheets_values->append(
-      $spreadsheetId,
-      $range,
-      $body,
-      $params
-    );
-    
-    if($result->updates->updatedRows == 1){
-      echo "Success";
-    } else {
-      echo "Fail";
-    }
+    gSheetInsert($elems, $client);
 
   }
 }
-  
-
-
-  
-//echo '<pre>';echo var_export($elems);echo '</pre>';
-
-
-//echo '<pre>';echo var_export($newArr);echo '</pre>';exit;
-
 /*
-$values = [
-	['this is data to insert', 'my name'],
-];
+// [START sheets_conditional_formatting]
+use Google\Client;
+use Google\Service\Drive;
+use Google\Service\Sheets\BatchUpdateSpreadsheetRequest;
+use Google\Service\Sheets\Request;
+
+function conditionalFormatting($spreadsheetId)
+    {
+        /* Load pre-authorized user credentials from the environment.
+           TODO(developer) - See https://developers.google.com/identity for
+            guides on implementing OAuth2 for your application. */
+/*
+        
+        $client = new Google\Client();
+        $client->setAuthConfig(__DIR__ . '/credentials.json');
+        $client->setApplicationName('Google Sheets with Primo');
+        $client->setScopes([\Google_Service_Sheets::SPREADSHEETS]);
+        $client->setAccessType('offline');
+        
+        $service = new Google_Service_Sheets($client);
+
+        try{
+            $myRange = [
+                'sheetId' => 0,
+                'startRowIndex' => 0,
+                'endRowIndex' => 3,
+                'startColumnIndex' => 0,
+                'endColumnIndex' => 3,
+            ];
+            //execute the request
+            $requests = [
+                new Google_Service_Sheets_Request([
+                'addConditionalFormatRule' => [
+                    'rule' => [
+                        'ranges' => [ $myRange ],
+                        'booleanRule' => [
+                            'condition' => [
+                                'type' => 'CUSTOM_FORMULA',
+                                'values' => [ [ 'userEnteredValue' => '=GT($B3,$C3)' ] ]
+                            ],
+                            'format' => [
+                                'textFormat' => [ 'foregroundColor' => [ 'red' => 0.8 ] ]
+                                ]
+                                ]
+                            ],
+                            'index' => 0
+                            ]
+                        ])
+                        
+        ];
+        
+        $batchUpdateRequest = new Google_Service_Sheets_BatchUpdateSpreadsheetRequest([
+            'requests' => $requests
+        ]);
+        $response = $service->spreadsheets->batchUpdate($spreadsheetId, $batchUpdateRequest);
+        printf("%d cells updated.", count($response->getReplies()));
+        return $response;
+    }
+    catch(Exception $e) {
+        // TODO(developer) - handle error appropriately
+        echo 'Message: ' .$e->getMessage();
+    }
+}
+    // [END sheets_conditional_formatting]
+    require 'vendor/autoload.php';
+    conditionalFormatting('1owRwWJm_SCt18Xi3cMkxaamGLmC1xokYsUEdyHjE94M');
+
 */
-//echo "<pre>";print_r($values);echo "</pre>";exit;
+
 
 
 
