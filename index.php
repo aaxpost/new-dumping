@@ -15,6 +15,8 @@ ini_set('display_errors', 'on');
 //Максимальное время выполнения скрипта
 ini_set('max_execution_time', '10000');
 set_time_limit(0);
+ini_set('memory_limit', '2048M');
+ignore_user_abort(true);
 
 //Загрузка библиотеки для парсинга
 require_once ('./vendor/autoload.php');
@@ -49,14 +51,16 @@ foreach ($array as $key => $elems) {
     //KRUCHKOV
     $url = $elems[1];
     //echo $url;exit;
-    $document = new Document($url, true);
+    var_dump(curlFunc($url));exit;
+    $document = new Document(curlFunc($url), true);
     //Регулярная цена на нашем сайте
     $price = $document->first('h2.h2_price');
+    $price = $price->text();
     //echo $price;exit;
     if (empty($price)) {
       $elems[1] = 'error';
     } else {
-      preg_match('/[0-9\s]+/', $price->text(), $matches);
+      preg_match('/[0-9\s]+/', $price, $matches);
       $string = intval(str_replace(" ", "", $matches[0]));
       $elems[1] = intval($string);
       //$elems[1] = $price->text();
