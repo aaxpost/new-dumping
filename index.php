@@ -42,7 +42,7 @@ gSheetInsert([date(DATE_RFC822), 'Назаренко'], $client);
 foreach ($array as $key => $elems) {
   if ($key == 0) {
     //1 ROW Строка с артикулом и именем партнера или ссылкой на сайт
-    gSheetInsert($elems, $client);
+    //gSheetInsert($elems, $client);
   }
 
   if ($key != 0) {
@@ -56,14 +56,16 @@ foreach ($array as $key => $elems) {
     if (empty($price)) {
       $elems[1] = 'error';
     } else {
+      preg_match('/[0-9\s]+/', $price->text(), $matches);
+      $string = intval(str_replace(" ", "", $matches[0]));
+      $elems[1] = intval($string);
       //$elems[1] = $price->text();
-      $elems[1] = 1000;
+      //$elems[1] = 1000;
       //PARTNER
       $elems[2] = 2000;
     }
-    gSheetInsert($elems, $client);
-
   }
+  gSheetInsert($elems, $client);
 }
 /*
 // [START sheets_conditional_formatting]
