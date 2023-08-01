@@ -19,8 +19,8 @@ function curlFunc($url) {
     //echo $cookieFilePath;
     curl_setopt($curl, CURLOPT_COOKIEFILE, $cookieFilePath);
     curl_setopt($curl, CURLOPT_COOKIEJAR,  $cookieFilePath);
-    //заголовка USERAGENT
-    curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)');
+    //заголовкb USERAGENT
+    curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36');
     // Выполняем запрос, сохранив ответ в переменную:
     $res = curl_exec($curl);
     return $res;

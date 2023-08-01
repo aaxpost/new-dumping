@@ -84,7 +84,8 @@ foreach ($array as $key => $elems) {
       //Регулярная цена на проме
       $price = $document->find('div.b-product-cost');
       $price = $document->first('*[^data-=product_price]');
-      echo $price->text();exit;
+      echo '!!!';
+      echo $price->text();
       //echo $price;exit;
       if (empty($price)) {
         $elems[2] = 'error';
@@ -99,6 +100,7 @@ foreach ($array as $key => $elems) {
         //$elems[2] = 2000;
       }
   }
+  exit;
   gSheetInsert($elems, $client);
 }
 /*
