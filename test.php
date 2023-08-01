@@ -9,13 +9,21 @@ use Didom\Query;
 
 //Загрузка функций
 require ('function/curlFunc.php');
-
+/*
 $url = 'https://kruchkov.com.ua/kartoplekopach/kartoplekopach-universalnij-kk1';
 $document = new Document($url, true);
 //Регулярная цена на нашем сайте
 $elemPrice = $document->first('h2.h2_price');
 echo $elemPrice->text();
 //echo "<br>".$elem->text(); 
+*/
+$url = "https://dommotoblok.com.ua/ua/p1873615320-kartofelekopatel-vibratsionnyj-ekstsentrikovyj.html";
+$document = new Document($url, true);
+//var_dump($document);
+//Регулярная цена на проме Рабочий код
+$elem = $document->find('div.b-product-cost');
+$elem = $document->first('*[^data-=product_price]');
+echo $elem->text();
 
 
 //var_dump(htmlspecialchars($elem->attr('type')));

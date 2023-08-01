@@ -50,9 +50,12 @@ foreach ($array as $key => $elems) {
   if ($key != 0) {
     //KRUCHKOV
     $url = $elems[1];
+    $dataFile = curlFunc($url);
     //echo $url;exit;
-    var_dump(curlFunc($url));exit;
-    $document = new Document(curlFunc($url), true);
+    //var_dump(curlFunc($url));exit;
+    //$document = new Document(curlFunc($url), true);
+    //sleep(rand(1, 10));
+    $document = new Document($dataFile);
     //Регулярная цена на нашем сайте
     $price = $document->first('h2.h2_price');
     $price = $price->text();
@@ -66,8 +69,35 @@ foreach ($array as $key => $elems) {
       //$elems[1] = $price->text();
       //$elems[1] = 1000;
       //PARTNER
-      $elems[2] = 2000;
+      //$elems[2] = 2000;
     }
+
+
+      //DOMMOTOBLOK
+      $url = $elems[2];
+      $dataFile = curlFunc($url);
+      //echo $url;exit;
+      //var_dump(curlFunc($url));exit;
+      //$document = new Document(curlFunc($url), true);
+      //sleep(rand(1, 10));
+      $document = new Document($dataFile);
+      //Регулярная цена на проме
+      $price = $document->find('div.b-product-cost');
+      $price = $document->first('*[^data-=product_price]');
+      echo $price->text();exit;
+      //echo $price;exit;
+      if (empty($price)) {
+        $elems[2] = 'error';
+      } else {
+        $price = $price->text();
+        preg_match('/[0-9\s]+/', $price, $matches);
+        $string = intval(str_replace(" ", "", $matches[0]));
+        $elems[1] = intval($string);
+        //$elems[1] = $price->text();
+        //$elems[1] = 1000;
+        //PARTNER
+        //$elems[2] = 2000;
+      }
   }
   gSheetInsert($elems, $client);
 }
