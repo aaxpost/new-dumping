@@ -29,6 +29,7 @@ require ('function/gSheetRead.php');
 require ('function/gSheetInsert.php');
 require ('function/stringToNum.php');
 require ('function/auditPrice.php');
+require ('function/auditHref.php');
 //Загрузка зависимостей Google API
 require __DIR__ . '/vendor/autoload.php';
 
@@ -55,15 +56,11 @@ foreach ($array as $key => $elems) {
   //Все остальные строки
   if ($key != 0) {
     //KRUCHKOV
-    if (strlen($elems[1]) < 4) {
+    if (auditHref($elems[1])) {
       $document = new Document(curlFunc($elems[1]));
       $kruchkov_price = $document->first('h2.h2_price');
-      if ($kruchkov_price == NULL) {
-        $elems[1] = "er href";
-        } else {
-          $kruchkov_price = stringToNum($kruchkov_price->text());
-          $elems[1] = auditPrice($kruchkov_price);
-      } 
+      $kruchkov_price = stringToNum($kruchkov_price->text());
+      $elems[1] = auditPrice($kruchkov_price);
     } else {
       $elems[1] = "no href";
     }
@@ -73,12 +70,13 @@ foreach ($array as $key => $elems) {
       $document = new Document(curlFunc($elems[2]));
       $dommotoblok_price = $document->find('div.b-product-cost');
       $dommotoblok_price = $document->first('*[^data-=product_price]');
-      if ($dommotoblok_price == NULL) {
-        $elems[2] = "er href";
-      } else {
+      if ($dommotoblok_price != NULL) {
         $dommotoblok_price = stringToNum($dommotoblok_price->text());
         $elems[2] = auditPrice($dommotoblok_price);
+      } else {
+        $elems[2] = "er href";
       }
+      
     } else {
       $elems[3] = "no href";
     }

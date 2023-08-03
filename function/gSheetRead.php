@@ -1,8 +1,7 @@
 <?php
-function gSheetRead() {
+function gSheetRead($href) {
     //Получаем данные со страницы гугл лист
     //Для этого разбираем ссылку регулярными выражениями
-    $href = 'https://docs.google.com/spreadsheets/d/1ByccFLnRlHkoZeWtoVum3fFzWU5LC1Lk87o5ZaC2w2c/edit#gid=1158696318';
     $patterId = '#d\/(.+)\/.+gid\=([0-9]+)$#';
     preg_match($patterId, $href, $matches);
     $id = $matches[1];

@@ -4,7 +4,7 @@
 
 #HttpOnly_kruchkov.com.ua	FALSE	/	FALSE	0	default	1556ce313caae011c2caaf9d2e792073
 #HttpOnly_kruchkov.com.ua	FALSE	/	FALSE	0	PHPSESSID	c86c16b22adac6b0bd2211853e068f58
-.kruchkov.com.ua	TRUE	/	FALSE	1693479382	language	uk-ua
-.kruchkov.com.ua	TRUE	/	FALSE	1693479382	langmark_multi_name	UA+
-.kruchkov.com.ua	TRUE	/	FALSE	1693479382	lm_prefix	kruchkov.com.ua%2F
+.kruchkov.com.ua	TRUE	/	FALSE	1693657589	language	uk-ua
+.kruchkov.com.ua	TRUE	/	FALSE	1693657589	langmark_multi_name	UA+
+.kruchkov.com.ua	TRUE	/	FALSE	1693657589	lm_prefix	kruchkov.com.ua%2F
 .kruchkov.com.ua	TRUE	/	FALSE	1693457820	currency	UAH
