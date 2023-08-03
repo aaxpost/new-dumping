@@ -55,7 +55,7 @@ foreach ($array as $key => $elems) {
   //Все остальные строки
   if ($key != 0) {
     //KRUCHKOV
-    if (strlen($elems[1]) < 4) {
+    if (strlen($elems[1]) > 4) {
       $document = new Document(curlFunc($elems[1]));
       $kruchkov_price = $document->first('h2.h2_price');
       if ($kruchkov_price == NULL) {
@@ -69,7 +69,7 @@ foreach ($array as $key => $elems) {
     }
     
     //DOMMOTOBLOK
-    if (auditHref($elems[2])) {
+    if (strlen($elems[2]) > 4) {
       $document = new Document(curlFunc($elems[2]));
       $dommotoblok_price = $document->find('div.b-product-cost');
       $dommotoblok_price = $document->first('*[^data-=product_price]');
@@ -80,7 +80,7 @@ foreach ($array as $key => $elems) {
         $elems[2] = auditPrice($dommotoblok_price);
       }
     } else {
-      $elems[3] = "no href";
+      $elems[2] = "no href";
     }
 
     //Запрос на внесение в таблицу строки данных по одному артикулу

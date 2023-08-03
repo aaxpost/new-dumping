@@ -1,6 +1,6 @@
 <?php
 function auditPrice($price_1, $price_2 = 999999, $price_3 = 999999) {
-    if ($price_1 == NULL) AND $price_2 == NULL AND $price_3 == NULL) {
+    if ($price_1 == NULL AND $price_2 == NULL AND $price_3 == NULL) {
       return "error";
     } else {
       if ($price_1 == NULL OR $price_1 == 0) {
