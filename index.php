@@ -3,7 +3,7 @@
     <title>NEW-DUMPING</title>
   </head>
   <body>
-    <h1>NEW-DUMPING НАЗАРЕНКО</h1>
+    <h1>NEW-DUMPING ГОЦУЛЕНКО РАБОЧИЙ</h1>
   </body>
 </html>
 <?php
@@ -41,10 +41,10 @@ $client->setAccessType('offline');
 $client->setAuthConfig(__DIR__ . '/credentials.json');
 
 //Нулевая строка, технические данные: дата запроса и фамилия менеджера
-gSheetInsert([date(DATE_RFC822), 'Назаренко'], $client);
+gSheetInsert([date(DATE_RFC822), 'Гоцуленко'], $client);
 
 //Считываю данные для парсинга из базового листа
-$href = 'https://docs.google.com/spreadsheets/d/1ByccFLnRlHkoZeWtoVum3fFzWU5LC1Lk87o5ZaC2w2c/edit#gid=1158696318';
+$href = 'https://docs.google.com/spreadsheets/d/1-15jXOYKGdQU00yHdQItbMHN23OEJjVsUlok-RsmLbs/edit#gid=299108438';
 $array = gSheetRead($href);
 
 foreach ($array as $key => $elems) {
@@ -68,21 +68,108 @@ foreach ($array as $key => $elems) {
       $elems[1] = "no href";
     }
     
-    //DOMMOTOBLOK
-    if (strlen($elems[2]) > 4) {
-      $document = new Document(curlFunc($elems[2]));
-      $dommotoblok_price = $document->find('div.b-product-cost');
-      $dommotoblok_price = $document->first('*[^data-=product_price]');
-      if ($dommotoblok_price == NULL) {
-        $elems[2] = "er href";
+    //MOIMOTOBLOK*
+    $i = 2;
+    if (strlen($elems[$i]) > 4) {
+      $document = new Document(curlFunc($elems[$i]));
+      $price = $document->first('div.price');
+      if ($price == NULL) {
+        $elems[$i] = "er href";
       } else {
-        $dommotoblok_price = stringToNum($dommotoblok_price->text());
-        $elems[2] = auditPrice($dommotoblok_price);
+        $price = stringToNum($price->text());
+        $elems[$i] = auditPrice($price);
       }
     } else {
-      $elems[2] = "no href";
+      $elems[$i] = "no href";
     }
 
+    //MOYA-FAZENDA*
+    $i = 3;
+    if (strlen($elems[$i]) > 4) {
+      $document = new Document(curlFunc($elems[$i]));
+      $price = $document->first('span#block_price');
+      if ($price == NULL) {
+        $elems[$i] = "er href";
+      } else {
+        $price = stringToNum($price->text());
+        $elems[$i] = auditPrice($price);
+      }
+    } else {
+      $elems[$i] = "no href";
+    }
+
+    //AGRODID*
+    $i = 4;
+    if (strlen($elems[$i]) > 4) {
+      $document = new Document(curlFunc($elems[$i]));
+      $price = $document->find('div.summary');
+      $price = $document->first('p.price');
+      if ($price == NULL) {
+        $elems[$i] = "er href";
+      } else {
+        $price = stringToNum($price->text());
+        $elems[$i] = auditPrice($price);
+      }
+    } else {
+      $elems[$i] = "no href";
+    }
+
+    //GECTAR*
+    $i = 5;
+    if (strlen($elems[$i]) > 4) {
+      $document = new Document(curlFunc($elems[$i]));
+      $price = $document->find('div.price');
+      $price = $document->first('span.price1');
+      if ($price == NULL) {
+        $elems[$i] = "er href";
+      } else {
+        $price = stringToNum($price->text());
+        $elems[$i] = auditPrice($price);
+      }
+    } else {
+      $elems[$i] = "no href";
+    }
+
+     //Agrotehnik*
+     $i = 6;
+    if (strlen($elems[$i]) > 4) {
+      $document = new Document(curlFunc($elems[$i]));
+      $price_1 = $document->first('span.autocalc-product-price');
+      $price_2 = $document->first('span.autocalc-product-special');
+      if ($price_1 == NULL AND $price_2 == NULL) {
+        $elems[$i] = "er href";
+      } else {
+        if ($price_1 == NULL) {
+          $price_1 = 999999;
+        } else {
+          $price_1 = stringToNum($price_1->text());
+        }
+        if ($price_2 == NULL) {
+          $price_2 = 999999;
+        } else {
+          $price_2 = stringToNum($price_1->text());
+        }
+        $elems[$i] = auditPrice($price_1, $price_2);
+      }
+    } else {
+      $elems[$i] = "no href";
+    }
+
+    //Dokamir
+    $i = 7;
+    if (strlen($elems[$i]) > 4) {
+      $document = new Document(curlFunc($elems[$i]));
+      $price = $document->find('div.product-info');
+      $price = $document->first('div#pr201');
+      if ($price == NULL) {
+        $elems[$i] = "er href";
+      } else {
+        $price = stringToNum($price->text());
+        $elems[$i] = auditPrice($price);
+      }
+    } else {
+      $elems[$i] = "no href";
+    }
     //Запрос на внесение в таблицу строки данных по одному артикулу
     gSheetInsert($elems, $client);
   }
