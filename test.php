@@ -41,8 +41,12 @@ require __DIR__ . '/vendor/autoload.php';
       //$price = $document->find('div.b-product-cost');
       //$price = $document->find('div.price');
       //var_dump($price)."<br>";exit;
-      $price = $document->find('div.product-info');
-      $price = $document->first('div#pr201');
+      //$price = $document->find('div.price-buy');
+      //var_dump($price)."<br>";
+      
+      $price = $document->first('p.catalog_item-price-actual');
+      //$price = $document->first('span.price-new');
+      //$price = $document->first('*[^data-=product_price]');
       //$price = $document->first('*[^data-=product_price]');
       
       //$price = $document->first('*[^data-=product_price]');

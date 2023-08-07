@@ -3,7 +3,7 @@
     <title>NEW-DUMPING</title>
   </head>
   <body>
-    <h1>NEW-DUMPING ГРАКОВ РАБОЧИЙ</h1>
+    <h1>NEW-DUMPING ГОЦУЛЕНКО РАБОЧИЙ</h1>
   </body>
 </html>
 <?php
@@ -68,16 +68,26 @@ foreach ($array as $key => $elems) {
       $elems[1] = "no href";
     }
     
-    //https://agrokram.com/*
+    //MOIMOTOBLOK*
     $i = 2;
-    $elems[$i] = "no code";
+    if (strlen($elems[$i]) > 4) {
+      $document = new Document(curlFunc($elems[$i]));
+      $price = $document->first('div.price');
+      if ($price == NULL) {
+        $elems[$i] = "er href";
+      } else {
+        $price = stringToNum($price->text());
+        $elems[$i] = auditPrice($price);
+      }
+    } else {
+      $elems[$i] = "no href";
+    }
 
-    //https://mototraktor.net/*
+    //MOYA-FAZENDA*
     $i = 3;
     if (strlen($elems[$i]) > 4) {
       $document = new Document(curlFunc($elems[$i]));
-      $price = $document->find('div.b-product-cost');
-      $price = $document->first('*[^data-=product_price]');
+      $price = $document->first('span#block_price');
       if ($price == NULL) {
         $elems[$i] = "er href";
       } else {
@@ -88,12 +98,12 @@ foreach ($array as $key => $elems) {
       $elems[$i] = "no href";
     }
 
-    //https://dnepr-traktor.net/*
+    //AGRODID*
     $i = 4;
     if (strlen($elems[$i]) > 4) {
       $document = new Document(curlFunc($elems[$i]));
-      $price = $document->find('div.b-product-cost');
-      $price = $document->first('*[^data-=product_price]');
+      $price = $document->find('div.summary');
+      $price = $document->first('p.price');
       if ($price == NULL) {
         $elems[$i] = "er href";
       } else {
@@ -104,12 +114,12 @@ foreach ($array as $key => $elems) {
       $elems[$i] = "no href";
     }
 
-    //https://natraktor.com/*
+    //GECTAR*
     $i = 5;
     if (strlen($elems[$i]) > 4) {
       $document = new Document(curlFunc($elems[$i]));
-      $price = $document->find('div.b-product-cost');
-      $price = $document->first('*[^data-=product_price]');
+      $price = $document->find('div.price');
+      $price = $document->first('span.price1');
       if ($price == NULL) {
         $elems[$i] = "er href";
       } else {
@@ -120,13 +130,12 @@ foreach ($array as $key => $elems) {
       $elems[$i] = "no href";
     }
 
-     //https://mbtop.com.ua/*
+     //Agrotehnik*
      $i = 6;
     if (strlen($elems[$i]) > 4) {
       $document = new Document(curlFunc($elems[$i]));
-      $price = $document->find('li.list-unstyled.price');
-      $price = $document->first('span.price-new');
-      //$price_2 = $document->first('span.autocalc-product-special');
+      $price_1 = $document->first('span.autocalc-product-price');
+      $price_2 = $document->first('span.autocalc-product-special');
       if ($price_1 == NULL AND $price_2 == NULL) {
         $elems[$i] = "er href";
       } else {
@@ -146,41 +155,12 @@ foreach ($array as $key => $elems) {
       $elems[$i] = "no href";
     }
 
-    //https://agroambar.com/*
+    //Dokamir
     $i = 7;
     if (strlen($elems[$i]) > 4) {
       $document = new Document(curlFunc($elems[$i]));
-      $price = $document->first('p.catalog_item-price-actual');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
-
-    //
-    $i = 8;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->first('p.catalog_item-price-actual');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
-
-    //
-    $i = 9;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->first('p.catalog_item-price-actual');
+      $price = $document->find('div.product-info');
+      $price = $document->first('div#pr201');
       if ($price == NULL) {
         $elems[$i] = "er href";
       } else {
