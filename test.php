@@ -33,36 +33,34 @@ require ('function/auditPrice.php');
 require __DIR__ . '/vendor/autoload.php';
 
 
-//Считываю данные для парсинга из базового листа
-      //$document = new Document('page.html', true);
-      //$document = new Document(curlFunc('https://romb.ua/ua/kartoplekopach-transporternij-premium-kk10.html'));
-      
-     //var_dump(file_get_contents('https://agrokram.com/kopalki-kartofelja-motoblok-kk-8/'))."<br>";exit;
-      //$price = $document->find('div.b-product-cost');
-      //$price = $document->find('div.price');
-      //var_dump($price)."<br>";exit;
-      //$price = $document->find('div.price-buy');
-      //var_dump($price)."<br>";
-      //itemprop="price"
-      
-      //var_dump($price)."<br>";exit;
-      //$price = $price->nextSibling();
-     
-      //$price = $document->first('span.price-new');
-      //$price = $document->first('*[^data-=product_price]');
-      //$price = $document->first('*[^data-=product_price]');
-      
-      //$price = $document->first('*[^data-=product_price]');
-      //$price = $document->first('h2.h2_price');
-      //$price = $document->find('div.ib-price');
-      //var_dump($price)."<br>";exit;
-      //$price = $document->first('b.data-value-price');
-      //var_dump($price)."<br>";
-      //var_dump($price)."<br>";exit;
+
+
+
+      //Приближаюсь к универсальной функции
+        $href = 'https://agro-club.com.ua/ua/p1108689491-krossovyj-mototsikl-250.html';
+        if (strlen($href) > 4) {
+          $document = new Document(curlFunc($href));
+          if ($document->has('div.b-product-cost')) {
+            echo $document->find('div.b-product-cost')[0]->first('*[^data-=product_price]')->text();exit;
+          } else {
+            echo "error";
+          }  
+        } else {
+          echo "no href";
+        }
+        exit;
+
+
+
+
+
 
         
-        $document = new Document(curlFunc('https://agro-club.com.ua/ua/p1767351620-kartofelekopalka-vibratsionnaya-zirka.html'));
-        
+        //if (empty($document)) {echo "array empty";}
+        //var_dump($document);
+        //exit;
+        //рабочий код для прома
+
         echo $document->find('div.b-product-cost')[0]->first('*[^data-=product_price]')->text();exit;
         //$price_1 = $document->find('div.inf-block.ib-price')->first('span.price.stock')->text();exit;
         if (count($document->find('*[^data-=product_price]')) > 0) {
