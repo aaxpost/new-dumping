@@ -3,7 +3,7 @@
     <title>NEW-DUMPING</title>
   </head>
   <body>
-    <h1>NEW-DUMPING ГРАКОВ РАБОЧИЙ</h1>
+    <h1>NEW-DUMPING ЧЕРНОБРЫВЕЦ РАБОЧИЙ</h1>
   </body>
 </html>
 <?php
@@ -41,10 +41,10 @@ $client->setAccessType('offline');
 $client->setAuthConfig(__DIR__ . '/credentials.json');
 
 //Нулевая строка, технические данные: дата запроса и фамилия менеджера
-gSheetInsert([date(DATE_RFC822), 'Граков'], $client);
+gSheetInsert([date(DATE_RFC822), 'Чернобрывец'], $client);
 
 //Считываю данные для парсинга из базового листа
-$href = 'https://docs.google.com/spreadsheets/d/1AKDsFSFQlI-mbH4rSRyXM3_78bCJdUGJoSkQIe6eFNo/edit#gid=1061767132';
+$href = 'https://docs.google.com/spreadsheets/d/1t3mGM9aYTMN5UApPhhe2craUmKRfO1LNGsO-Kd-uTNg/edit#gid=2023262523';
 $array = gSheetRead($href);
 
 foreach ($array as $key => $elems) {
@@ -68,221 +68,115 @@ foreach ($array as $key => $elems) {
       $elems[1] = "no href";
     }
     
-    //https://agrokram.com/*
+    //https://motoblok-pro.com.ua/*
     $i = 2;
+    if (strlen($elems[$i]) > 4) {
+      $document = new Document(curlFunc($elems[$i]));
+      $price = $document->find('ul.list-unstyled.price')[0]->first('li')->text();
+      if ($price == NULL) {
+        $elems[$i] = "er href";
+      } else {
+        $price = stringToNum($price);
+        $elems[$i] = auditPrice($price);
+      }
+    } else {
+      $elems[$i] = "no href";
+    }
+
+    //https://ftech.in.ua/*
+    $i = 3;
     $elems[$i] = "no code";
 
-    //https://mototraktor.net/*
-    $i = 3;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->find('div.b-product-cost');
-      $price = $document->first('*[^data-=product_price]');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
-
-    //https://dnepr-traktor.net/*
+    //https://fermerplus.com.ua/*
     $i = 4;
+    $elems[$i] = "error";
+    /*
     if (strlen($elems[$i]) > 4) {
       $document = new Document(curlFunc($elems[$i]));
-      $price = $document->find('div.b-product-cost');
-      $price = $document->first('*[^data-=product_price]');
+      //prom.ua
+      $price = $document->find('div.b-product-cost')[0]->first('*[^data-=product_price]')->text();
       if ($price == NULL) {
         $elems[$i] = "er href";
       } else {
-        $price = stringToNum($price->text());
+        $price = stringToNum($price);
         $elems[$i] = auditPrice($price);
       }
     } else {
       $elems[$i] = "no href";
     }
+    */
 
-    //https://natraktor.com/*
+    //https://pum.in.ua/*
     $i = 5;
     if (strlen($elems[$i]) > 4) {
       $document = new Document(curlFunc($elems[$i]));
-      $price = $document->find('div.b-product-cost');
-      $price = $document->first('*[^data-=product_price]');
+
+      if (count($document->find('span.price.stock')) > 0) {
+        $price_1 = $document->find('div.inf-block.ib-price')[0]->first('span.price.stock')->text();
+      } else {
+          $price_1 = 999999;
+      }
+      if (count($document->find('span.price')) > 0) {
+        $price_2 = $document->find('div.inf-block.ib-price')[0]->first('span.price')->text();
+      } else {
+          $price_2 = 999999;
+      }
+      if ($price_1 == 999999 AND $price_2 == 999999) {
+        $price = 'er_pars';
+      } else {
+        $price = min($price_1, $price_2);
+      }
+      $elems[$i] = stringToNum($price);
+    } else {
+      $elems[$i] = "no href";
+    }
+
+     //https://mangalshop.com.ua/*
+     $i = 6;
+     if (strlen($elems[$i]) > 4) {
+      $document = new Document(curlFunc($elems[$i]));
+      $price = $document->find('div.product-price__box')[0]->first('div.product-price__item')->text();
       if ($price == NULL) {
         $elems[$i] = "er href";
       } else {
-        $price = stringToNum($price->text());
+        $price = stringToNum($price);
         $elems[$i] = auditPrice($price);
       }
     } else {
       $elems[$i] = "no href";
     }
 
-     //https://mbtop.com.ua/*
-     $i = 6;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price_1 = $document->find('li.list-unstyled.price');
-      $price_1 = $document->first('span.price-new');
-      $price_2 = NULL;
-      if ($price_1 == NULL AND $price_2 == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        if ($price_1 == NULL) {
-          $price_1 = 999999;
-        } else {
-          $price_1 = stringToNum($price_1->text());
-        }
-        if ($price_2 == NULL) {
-          $price_2 = 999999;
-        } else {
-          $price_2 = stringToNum($price_1->text());
-        }
-        $elems[$i] = auditPrice($price_1, $price_2);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
-
-    //https://agroambar.com/*
+    //https://teploreal.com.ua/*
     $i = 7;
     if (strlen($elems[$i]) > 4) {
       $document = new Document(curlFunc($elems[$i]));
-      $price = $document->first('p.catalog_item-price-actual');
+      //prom.ua
+      $price = $document->find('div.b-product-cost')[0]->first('*[^data-=product_price]')->text();
       if ($price == NULL) {
         $elems[$i] = "er href";
       } else {
-        $price = stringToNum($price->text());
+        $price = stringToNum($price);
         $elems[$i] = auditPrice($price);
       }
     } else {
       $elems[$i] = "no href";
     }
 
-    //https://vladgreenline.com/*
+    //https://agro-club.com.ua/*
     $i = 8;
     if (strlen($elems[$i]) > 4) {
       $document = new Document(curlFunc($elems[$i]));
-      $price = $document->find('div.b-product-cost');
-      $price = $document->first('*[^data-=product_price]');
+      $price = $document->find('div.b-product-cost')[0]->first('*[^data-=product_price]')->text();
       if ($price == NULL) {
         $elems[$i] = "er href";
       } else {
-        $price = stringToNum($price->text());
+        $price = stringToNum($price);
         $elems[$i] = auditPrice($price);
       }
     } else {
       $elems[$i] = "no href";
     }
 
-    //https://mentol.in.ua/*
-    $i = 9;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->find('div.b-product-cost');
-      $price = $document->first('*[^data-=product_price]');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
-
-    //https://romb.ua/*
-    $i = 10;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->find('div.price-box.price-final_price');
-      $price = $document->first('span.price');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
-
-    //https://avtogeshik.com.ua/*
-    $i = 11;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->first('*[^data-=product_price]');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
-
-    //https://mechanikus.com.ua/*
-    $i = 12;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->first('*[^data-=product_price]');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
-
-    //https://sklad310.com/*
-    $i = 13;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->first('*[^data-=product_price]');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
-
-    //https://allex.pro/*
-    $i = 14;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->first('*[^data-=product_price]');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
-
-     //https://notre.com.ua/*
-     $i = 15;
-     if (strlen($elems[$i]) > 4) {
-       $document = new Document(curlFunc($elems[$i]));
-       $price = $document->first('*[^data-=product_price]');
-       if ($price == NULL) {
-         $elems[$i] = "er href";
-       } else {
-         $price = stringToNum($price->text());
-         $elems[$i] = auditPrice($price);
-       }
-     } else {
-       $elems[$i] = "no href";
-     }
     //Запрос на внесение в таблицу строки данных по одному артикулу
     gSheetInsert($elems, $client);
   }

@@ -37,18 +37,30 @@ require __DIR__ . '/vendor/autoload.php';
 
 
       //Приближаюсь к универсальной функции
-        $href = 'https://agro-club.com.ua/ua/p1108689491-krossovyj-mototsikl-250.html';
+      //
+        $href = 'https://moimotoblok.com.ua/motoblok-forte-md-81-lux';
         if (strlen($href) > 4) {
-          $document = new Document(curlFunc($href));
-          if ($document->has('div.b-product-cost')) {
-            echo $document->find('div.b-product-cost')[0]->first('*[^data-=product_price]')->text();exit;
+          //получаю строку с кодом
+          $strHtml = curlFunc($href);
+          //Если строка пустая, защита сайта, вывожу ошибку
+          if (!empty($strHtml)) {
+            $document = new Document($strHtml);
+            if ($document->has('div.b-product-cost')) {
+              echo $document->find('div.b-product-cost')[0]->first('*[^data-=product_price]')->text();exit;
+            } else {
+              echo "error";
+            }
           } else {
-            echo "error";
-          }  
+            echo "site_error";
+          }
         } else {
-          echo "no href";
+          echo "no_href";
         }
-        exit;
+        
+
+
+
+
 
 
 
@@ -56,29 +68,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 
         
-        //if (empty($document)) {echo "array empty";}
-        //var_dump($document);
-        //exit;
-        //рабочий код для прома
 
-        echo $document->find('div.b-product-cost')[0]->first('*[^data-=product_price]')->text();exit;
-        //$price_1 = $document->find('div.inf-block.ib-price')->first('span.price.stock')->text();exit;
-        if (count($document->find('*[^data-=product_price]')) > 0) {
-            $price_1 = $document->find('div.b-product-cost')[0]->first('*[^data-=product_price]')->text();
-        } else {
-            $price_1 = 999999;
-        }
-        if (count($document->find('span.price')) > 0) {
-          $price_2 = $document->find('div.b-product-cost')[0]->first('span.price')->text();
-        } else {
-            $price_2 = 999999;
-        }
-        if ($price_1 == 999999 AND $price_2 == 999999) {
-          $price = 'er_pars';
-        } else {
-          $price = min($price_1, $price_2);
-        }
-        echo $price;
         
         
 
