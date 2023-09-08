@@ -38,15 +38,25 @@ require __DIR__ . '/vendor/autoload.php';
 
       //Приближаюсь к универсальной функции
       //
-        $href = 'https://moimotoblok.com.ua/motoblok-forte-md-81-lux';
+        $href = 'http://old.kruchkov.com.ua/katalog/gruntozacep/gruntozatsep-pubert-340-ko2';
         if (strlen($href) > 4) {
           //получаю строку с кодом
           $strHtml = curlFunc($href);
           //Если строка пустая, защита сайта, вывожу ошибку
           if (!empty($strHtml)) {
             $document = new Document($strHtml);
-            if ($document->has('div.b-product-cost')) {
-              echo $document->find('div.b-product-cost')[0]->first('*[^data-=product_price]')->text();exit;
+            if ($document->has('div.product-field-display')) {
+              echo $document->find('div.product-field-display')[0]->text();
+            } else {
+              echo "error";
+            }
+            if ($document->has('h1.b1c-name.b2c-name')) {
+              echo $document->find('h1.b1c-name.b2c-name')[0]->text();
+            } else {
+              echo "error";
+            }
+            if ($document->has('div.tab-pane.fade.in.active')) {
+              echo $document->find('div.tab-pane.fade.in.active')[0]->html();
             } else {
               echo "error";
             }
@@ -56,8 +66,10 @@ require __DIR__ . '/vendor/autoload.php';
         } else {
           echo "no_href";
         }
-        
 
+        ////////////////////////
+        
+      
 
 
 

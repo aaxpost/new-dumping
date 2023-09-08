@@ -4,6 +4,6 @@
 
 moimotoblok.com.ua	FALSE	/	TRUE	0	lsc_private	b752d2e8fcfef71bbc5c42727ac29368
 moimotoblok.com.ua	FALSE	/	TRUE	0	_lscache_vary	language%3Aua
-.moimotoblok.com.ua	TRUE	/	TRUE	1693745210	currency	UAH
-.moimotoblok.com.ua	TRUE	/	TRUE	1693745210	language	ua
 moimotoblok.com.ua	FALSE	/	TRUE	0	OCSESSID	44c16c4aeacedb93c2eb173c8f
+.moimotoblok.com.ua	TRUE	/	TRUE	1696505167	language	ua
+.moimotoblok.com.ua	TRUE	/	TRUE	1696505167	currency	UAH
