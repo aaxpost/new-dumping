@@ -12,8 +12,8 @@ function curlFunc($url) {
     curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
     //cookie
     //Имя и путь к файлу
-    //preg_match('#https://([a-z.-]+)#', $url, $matches);
-    preg_match('#http://([a-z.-]+)#', $url, $matches);
+    preg_match('#https://([a-z.-]+)#', $url, $matches);
+    //preg_match('#http://([a-z.-]+)#', $url, $matches);
     $name = preg_replace('#\.#', "_", $matches[1]).".txt";
     $path = '/temp/'.$name;
     $cookieFilePath = $_SERVER['DOCUMENT_ROOT'] . $path;
