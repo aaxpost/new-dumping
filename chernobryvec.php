@@ -44,7 +44,10 @@ $client->setAuthConfig(__DIR__ . '/credentials.json');
 gSheetInsert([date(DATE_RFC822), 'Чернобрывец'], $client);
 
 //Считываю данные для парсинга из базового листа
-$href = 'https://docs.google.com/spreadsheets/d/1t3mGM9aYTMN5UApPhhe2craUmKRfO1LNGsO-Kd-uTNg/edit#gid=2023262523';
+//Подрібнювачі
+$href = 'https://docs.google.com/spreadsheets/d/1t3mGM9aYTMN5UApPhhe2craUmKRfO1LNGsO-Kd-uTNg/edit#gid=1721330882';
+//Кит набори
+//$href = 'https://docs.google.com/spreadsheets/d/1t3mGM9aYTMN5UApPhhe2craUmKRfO1LNGsO-Kd-uTNg/edit#gid=1979751587';
 $array = gSheetRead($href);
 
 foreach ($array as $key => $elems) {

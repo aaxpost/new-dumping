@@ -44,7 +44,10 @@ $client->setAuthConfig(__DIR__ . '/credentials.json');
 gSheetInsert([date(DATE_RFC822), 'Шворникова'], $client);
 
 //Считываю данные для парсинга из базового листа
-$href = 'https://docs.google.com/spreadsheets/d/1L6ocwvrGk9Uy1RsaAyYFLCzhrKUEtCyGfwlHMmc6vGw/edit#gid=756416573';
+//Подрібнювачі
+$href = 'https://docs.google.com/spreadsheets/d/1L6ocwvrGk9Uy1RsaAyYFLCzhrKUEtCyGfwlHMmc6vGw/edit#gid=839305164';
+//Кіт-набори
+//$href = 'https://docs.google.com/spreadsheets/d/1L6ocwvrGk9Uy1RsaAyYFLCzhrKUEtCyGfwlHMmc6vGw/edit#gid=712333605';
 $array = gSheetRead($href);
 
 foreach ($array as $key => $elems) {
@@ -205,6 +208,9 @@ foreach ($array as $key => $elems) {
 
     //TRADEHOUSE
     $i = 11;
+    $elems[$i] = "no href";
+    //Закоммитил 10/10/2023 так как на сайте нет наличии и выдавало ошибку
+    /*
     if (strlen($elems[$i]) > 4) {
       $document = new Document(curlFunc($elems[$i]));
       $price = $document->find('div.b-product-cost');
@@ -218,6 +224,7 @@ foreach ($array as $key => $elems) {
     } else {
       $elems[$i] = "no href";
     }
+    */
 
     //MOTOBLOK-24
     $i = 12;

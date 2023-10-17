@@ -4,7 +4,6 @@
 
 .dokamir.com.ua	TRUE	/	FALSE	1697017538	currency	UAH
 .dokamir.com.ua	TRUE	/	FALSE	1697017538	language	ru
-#HttpOnly_dokamir.com.ua	FALSE	/	FALSE	1694611938	PHPSESSID	l09ft7rorbfl7o92cnkn0mvrg4
 .gectar.com.ua	TRUE	/	TRUE	1697017531	currency	uah
 .gectar.com.ua	TRUE	/	TRUE	1697017531	language	ru
 gectar.com.ua	FALSE	/	TRUE	0	PHPSESSID	3h2na4dh04ffnsr5ukh6vv41n4

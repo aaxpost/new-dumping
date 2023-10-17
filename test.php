@@ -39,26 +39,6 @@ require __DIR__ . '/vendor/autoload.php';
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
       //Приближаюсь к универсальной функции
       //
         $href = 'http://old.kruchkov.com.ua/katalog/gruntozacep/gruntozatsep-pubert-340-ko2';

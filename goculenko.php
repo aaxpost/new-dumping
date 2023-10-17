@@ -44,7 +44,10 @@ $client->setAuthConfig(__DIR__ . '/credentials.json');
 gSheetInsert([date(DATE_RFC822), 'Гоцуленко'], $client);
 
 //Считываю данные для парсинга из базового листа
-$href = 'https://docs.google.com/spreadsheets/d/1-15jXOYKGdQU00yHdQItbMHN23OEJjVsUlok-RsmLbs/edit#gid=299108438';
+//Подрібнювачі
+$href = 'https://docs.google.com/spreadsheets/d/1-15jXOYKGdQU00yHdQItbMHN23OEJjVsUlok-RsmLbs/edit#gid=834283077';
+//Кіт набори
+//$href = 'https://docs.google.com/spreadsheets/d/1-15jXOYKGdQU00yHdQItbMHN23OEJjVsUlok-RsmLbs/edit#gid=501230981';
 $array = gSheetRead($href);
 
 foreach ($array as $key => $elems) {
@@ -70,6 +73,8 @@ foreach ($array as $key => $elems) {
     
     //MOIMOTOBLOK*
     $i = 2;
+    $elems[$i] = "error";
+    /*
     if (strlen($elems[$i]) > 4) {
       $document = new Document(curlFunc($elems[$i]));
       $price = $document->first('div.price');
@@ -82,6 +87,7 @@ foreach ($array as $key => $elems) {
     } else {
       $elems[$i] = "no href";
     }
+    */
 
     //MOYA-FAZENDA*
     $i = 3;
@@ -132,6 +138,8 @@ foreach ($array as $key => $elems) {
 
      //Agrotehnik*
      $i = 6;
+     $elems[$i] = "внести руками";
+     /*
     if (strlen($elems[$i]) > 4) {
       $document = new Document(curlFunc($elems[$i]));
       $price_1 = $document->first('span.autocalc-product-price');
@@ -154,6 +162,7 @@ foreach ($array as $key => $elems) {
     } else {
       $elems[$i] = "no href";
     }
+    */
 
     //Dokamir
     $i = 7;
