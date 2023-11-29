@@ -1,0 +1,4 @@
+recipe: lamp
+config:
+  php: 8.1
+  composer_version: 2.2.12

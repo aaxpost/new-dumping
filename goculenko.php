@@ -29,6 +29,7 @@ require ('function/gSheetRead.php');
 require ('function/gSheetInsert.php');
 require ('function/stringToNum.php');
 require ('function/auditPrice.php');
+require ('function/getPrice.php');
 //Загрузка зависимостей Google API
 require __DIR__ . '/vendor/autoload.php';
 
@@ -45,9 +46,16 @@ gSheetInsert([date(DATE_RFC822), 'Гоцуленко'], $client);
 
 //Считываю данные для парсинга из базового листа
 //Подрібнювачі
-$href = 'https://docs.google.com/spreadsheets/d/1-15jXOYKGdQU00yHdQItbMHN23OEJjVsUlok-RsmLbs/edit#gid=834283077';
+//$href = 'https://docs.google.com/spreadsheets/d/1-15jXOYKGdQU00yHdQItbMHN23OEJjVsUlok-RsmLbs/edit#gid=834283077';
+//ТЕСТ
+//$href = 'https://docs.google.com/spreadsheets/d/1-15jXOYKGdQU00yHdQItbMHN23OEJjVsUlok-RsmLbs/edit#gid=299108438';
 //Кіт набори
-//$href = 'https://docs.google.com/spreadsheets/d/1-15jXOYKGdQU00yHdQItbMHN23OEJjVsUlok-RsmLbs/edit#gid=501230981';
+$href = 'https://docs.google.com/spreadsheets/d/1-15jXOYKGdQU00yHdQItbMHN23OEJjVsUlok-RsmLbs/edit#gid=501230981';
+//Чеснокосажалки
+//$href = 'https://docs.google.com/spreadsheets/d/1-15jXOYKGdQU00yHdQItbMHN23OEJjVsUlok-RsmLbs/edit#gid=1198811805';
+//ТЕСТ
+//$href = 'https://docs.google.com/spreadsheets/d/1-15jXOYKGdQU00yHdQItbMHN23OEJjVsUlok-RsmLbs/edit#gid=299108438';
+
 $array = gSheetRead($href);
 
 foreach ($array as $key => $elems) {
@@ -106,19 +114,7 @@ foreach ($array as $key => $elems) {
 
     //AGRODID*
     $i = 4;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->find('div.summary');
-      $price = $document->first('p.price');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
+    $elems[$i] = getPrice ($elems, $i, 'p.price', 'bdi');
 
     //GECTAR*
     $i = 5;
@@ -136,49 +132,14 @@ foreach ($array as $key => $elems) {
       $elems[$i] = "no href";
     }
 
-     //Agrotehnik*
-     $i = 6;
-     $elems[$i] = "внести руками";
-     /*
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price_1 = $document->first('span.autocalc-product-price');
-      $price_2 = $document->first('span.autocalc-product-special');
-      if ($price_1 == NULL AND $price_2 == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        if ($price_1 == NULL) {
-          $price_1 = 999999;
-        } else {
-          $price_1 = stringToNum($price_1->text());
-        }
-        if ($price_2 == NULL) {
-          $price_2 = 999999;
-        } else {
-          $price_2 = stringToNum($price_1->text());
-        }
-        $elems[$i] = auditPrice($price_1, $price_2);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
-    */
-
+    //Agrotehnik*
+    $i = 6;
+    $elems[$i] = getPrice ($elems, $i, 'span.autocalc-product-special');
+   
     //Dokamir
     $i = 7;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->find('div.product-info');
-      $price = $document->first('div#pr201');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
+    $elems[$i] = getPrice ($elems, $i, 'div#pr201', 'span.price-new');
+    
     //Запрос на внесение в таблицу строки данных по одному артикулу
     gSheetInsert($elems, $client);
   }

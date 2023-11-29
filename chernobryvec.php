@@ -45,9 +45,12 @@ gSheetInsert([date(DATE_RFC822), 'Чернобрывец'], $client);
 
 //Считываю данные для парсинга из базового листа
 //Подрібнювачі
-$href = 'https://docs.google.com/spreadsheets/d/1t3mGM9aYTMN5UApPhhe2craUmKRfO1LNGsO-Kd-uTNg/edit#gid=1721330882';
+//$href = 'https://docs.google.com/spreadsheets/d/1t3mGM9aYTMN5UApPhhe2craUmKRfO1LNGsO-Kd-uTNg/edit#gid=1721330882';
 //Кит набори
-//$href = 'https://docs.google.com/spreadsheets/d/1t3mGM9aYTMN5UApPhhe2craUmKRfO1LNGsO-Kd-uTNg/edit#gid=1979751587';
+$href = 'https://docs.google.com/spreadsheets/d/1t3mGM9aYTMN5UApPhhe2craUmKRfO1LNGsO-Kd-uTNg/edit#gid=1979751587';
+//Чеснокосажалки
+//$href = 'https://docs.google.com/spreadsheets/d/1t3mGM9aYTMN5UApPhhe2craUmKRfO1LNGsO-Kd-uTNg/edit#gid=760290201';
+
 $array = gSheetRead($href);
 
 foreach ($array as $key => $elems) {
@@ -92,22 +95,27 @@ foreach ($array as $key => $elems) {
 
     //https://fermerplus.com.ua/*
     $i = 4;
-    $elems[$i] = "error";
-    /*
+    //Последняя версия кода, для прома, вроде работает 28/11/2023
     if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      //prom.ua
-      $price = $document->find('div.b-product-cost')[0]->first('*[^data-=product_price]')->text();
-      if ($price == NULL) {
-        $elems[$i] = "er href";
+      //получаю строку с кодом
+      $strHtml = curlFunc($elems[$i]);
+      //var_dump($strHtml);
+      //Если строка пустая, защита сайта, вывожу ошибку
+      if (!empty($strHtml)) {
+        $document = new Document($strHtml);
+        if ($document->has('p.b-product-cost__price')) {
+          $elems[$i] = $document->find('p.b-product-cost__price')[0]->first('*[^data-=product_price]')->text();
+        } else {
+          $elems[$i] = "error";
+        }
+        
       } else {
-        $price = stringToNum($price);
-        $elems[$i] = auditPrice($price);
+        $elems[$i] = "site_error";
       }
     } else {
-      $elems[$i] = "no href";
+      $elems[$i] = "no_href";
     }
-    */
+    
 
     //https://pum.in.ua/*
     $i = 5;

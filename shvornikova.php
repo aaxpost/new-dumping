@@ -29,6 +29,7 @@ require ('function/gSheetRead.php');
 require ('function/gSheetInsert.php');
 require ('function/stringToNum.php');
 require ('function/auditPrice.php');
+require ('function/getPrice.php');
 //Загрузка зависимостей Google API
 require __DIR__ . '/vendor/autoload.php';
 
@@ -45,9 +46,14 @@ gSheetInsert([date(DATE_RFC822), 'Шворникова'], $client);
 
 //Считываю данные для парсинга из базового листа
 //Подрібнювачі
-$href = 'https://docs.google.com/spreadsheets/d/1L6ocwvrGk9Uy1RsaAyYFLCzhrKUEtCyGfwlHMmc6vGw/edit#gid=839305164';
+//$href = 'https://docs.google.com/spreadsheets/d/1L6ocwvrGk9Uy1RsaAyYFLCzhrKUEtCyGfwlHMmc6vGw/edit#gid=839305164';
 //Кіт-набори
 //$href = 'https://docs.google.com/spreadsheets/d/1L6ocwvrGk9Uy1RsaAyYFLCzhrKUEtCyGfwlHMmc6vGw/edit#gid=712333605';
+//Часникосаджалки
+//$href = 'https://docs.google.com/spreadsheets/d/1L6ocwvrGk9Uy1RsaAyYFLCzhrKUEtCyGfwlHMmc6vGw/edit#gid=219408659';
+//ТЕСТ
+$href = 'https://docs.google.com/spreadsheets/d/1L6ocwvrGk9Uy1RsaAyYFLCzhrKUEtCyGfwlHMmc6vGw/edit#gid=270595482';
+
 $array = gSheetRead($href);
 
 foreach ($array as $key => $elems) {
@@ -228,18 +234,8 @@ foreach ($array as $key => $elems) {
 
     //MOTOBLOK-24
     $i = 12;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->first('div.js-product-price');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
+    $elems[$i] = getPrice ($elems, $i, 'div.t-store__prod-popup__price-item.t-name.t-name_md');
+    
 
     //VSE-MOTOBLOKI
     $i = 13;
@@ -321,22 +317,9 @@ foreach ($array as $key => $elems) {
 
     //AGROFAKTOR
     $i = 18;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->first('span.price__value');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
-
-    
-
-
+    $elems[$i] = "no site";
+    //$elems[$i] = getPrice ($elems, $i, 'div.t-store__prod-popup__price-item.t-name.t-name_md');
+ 
     //Запрос на внесение в таблицу строки данных по одному артикулу
     gSheetInsert($elems, $client);
   }

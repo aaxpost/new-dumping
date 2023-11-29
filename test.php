@@ -39,40 +39,48 @@ require __DIR__ . '/vendor/autoload.php';
 
 
 
-      //Приближаюсь к универсальной функции
-      //
-        $href = 'http://old.kruchkov.com.ua/katalog/gruntozacep/gruntozatsep-pubert-340-ko2';
-        if (strlen($href) > 4) {
-          //получаю строку с кодом
-          $strHtml = curlFunc($href);
-          //Если строка пустая, защита сайта, вывожу ошибку
-          if (!empty($strHtml)) {
-            $document = new Document($strHtml);
-            if ($document->has('div.product-field-display')) {
-              echo $document->find('div.product-field-display')[0]->text();
-            } else {
-              echo "error";
-            }
-            if ($document->has('h1.b1c-name.b2c-name')) {
-              echo $document->find('h1.b1c-name.b2c-name')[0]->text();
-            } else {
-              echo "error";
-            }
-            if ($document->has('div.tab-pane.fade.in.active')) {
-              echo $document->find('div.tab-pane.fade.in.active')[0]->html();
-            } else {
-              echo "error";
-            }
-          } else {
-            echo "site_error";
-          }
-        } else {
-          echo "no_href";
-        }
 
-        ////////////////////////
-*/        
-      
+        
+//$href = 'https://fermerplus.com.ua/ua/p787884282-drovokol-izmelchitel-vetok.html';
+//$href = 'https://agrotehnic.com.ua/ua/izmelchitel-vetok-drovokol-dlya-minitraktora-bez-konusa-odnostoronnyaya-zatochka-nozhej.html';
+$href = 'https://motoblok24.com.ua/drovokoly/tproduct/506651364-677832190351-drovokol-podrbnyuvach-glok-pd-motoblok-z';
+$elems = [$href];
+$i = 0;
+
+//Если не работает сайт, если нет ссылки, если не спарсилось, если нет элемента
+
+function getPrice ($elems, $i, $pattern_1, $pattern_2 = '') {
+  if (strlen($elems[$i]) > 4) {
+    //получаю строку с кодом
+    $strHtml = curlFunc($elems[$i]);
+    //var_dump($strHtml);
+    //Если строка пустая, защита сайта, вывожу ошибку
+    if (!empty($strHtml)) {
+      $document = new Document($strHtml);
+      if ($document->has($pattern_1)) {
+          if (strlen($pattern_2 > 4)) {
+              $price = $document->find($pattern_1)[0]->first($pattern_2)->text();
+            } else {
+              $price = $document->find($pattern_1)[0]->text();
+            }
+      } else {
+        $price = "error";
+      } 
+    } else {
+      $price = "site_error";
+    }
+  } else {
+    $price = "no_href";
+  }
+  $price = stringToNum($price);
+  return $price;
+}
+
+//echo "1:".getPrice ($elems, $i, 'span.autocalc-product-special');
+echo "2:".getPrice ($elems, $i, 'div.t-store__prod-popup__price-item.t-name.t-name_md');
+
+
+
 
 
 

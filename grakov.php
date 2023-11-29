@@ -48,6 +48,11 @@ gSheetInsert([date(DATE_RFC822), 'Граков'], $client);
 $href = 'https://docs.google.com/spreadsheets/d/1AKDsFSFQlI-mbH4rSRyXM3_78bCJdUGJoSkQIe6eFNo/edit#gid=1894254733';
 //Кит наборы
 //$href = 'https://docs.google.com/spreadsheets/d/1AKDsFSFQlI-mbH4rSRyXM3_78bCJdUGJoSkQIe6eFNo/edit#gid=1516206833';
+//Часнокосажалки
+//$href = 'https://docs.google.com/spreadsheets/d/1AKDsFSFQlI-mbH4rSRyXM3_78bCJdUGJoSkQIe6eFNo/edit#gid=120254664';
+//ТЕСТ
+//$href = 'https://docs.google.com/spreadsheets/d/1AKDsFSFQlI-mbH4rSRyXM3_78bCJdUGJoSkQIe6eFNo/edit#gid=1061767132';
+
 $array = gSheetRead($href);
 
 foreach ($array as $key => $elems) {
