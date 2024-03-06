@@ -53,6 +53,8 @@ gSheetInsert([date(DATE_RFC822), 'Шворникова'], $client);
 //$href = 'https://docs.google.com/spreadsheets/d/1L6ocwvrGk9Uy1RsaAyYFLCzhrKUEtCyGfwlHMmc6vGw/edit#gid=219408659';
 //ТЕСТ
 $href = 'https://docs.google.com/spreadsheets/d/1L6ocwvrGk9Uy1RsaAyYFLCzhrKUEtCyGfwlHMmc6vGw/edit#gid=270595482';
+//Картоплесаджалки
+//$href = 'https://docs.google.com/spreadsheets/d/1L6ocwvrGk9Uy1RsaAyYFLCzhrKUEtCyGfwlHMmc6vGw/edit#gid=659186658';
 
 $array = gSheetRead($href);
 
@@ -93,6 +95,7 @@ foreach ($array as $key => $elems) {
     }
 
     //FERMEROK
+    /*
     if (strlen($elems[3]) > 4) {
       $document = new Document(curlFunc($elems[3]));
       $price = $document->first('div.product-price__item');
@@ -105,8 +108,13 @@ foreach ($array as $key => $elems) {
     } else {
       $elems[3] = "no href";
     }
+    */
+    //Сайт недоступен, формулы не настроены, внес для проверки
+    $i = 3;
+    $elems[$i] = getPrice ($elems, $i, 'div.product-price__item');
 
     //DOM-AGRO
+    /*
     if (strlen($elems[4]) > 4) {
       $document = new Document(curlFunc($elems[4]));
       $price = $document->find('div.b-product-cost');
@@ -120,6 +128,10 @@ foreach ($array as $key => $elems) {
     } else {
       $elems[4] = "no href";
     }
+    */
+    //Сайт недоступен, формулы не настроены, внес для проверки
+    $i = 4;
+    $elems[$i] = getPrice ($elems, $i, 'div.b-product-cost', 'data-=product_price');
 
     //AGRO-PLUS
     if (strlen($elems[5]) > 4) {
@@ -151,19 +163,9 @@ foreach ($array as $key => $elems) {
     }
 
     //GARDEN-S
-    if (strlen($elems[7]) > 4) {
-      $document = new Document(curlFunc($elems[7]));
-      $price = $document->find('div.b-product-cost');
-      $price = $document->first('*[^data-=product_price]');
-      if ($price == NULL) {
-        $elems[7] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[7] = auditPrice($price);
-      }
-    } else {
-      $elems[7] = "no href";
-    }
+    //Настроил 6/02/2024 на проверке
+    $i = 7;
+    $elems[$i] = getPrice ($elems, $i, 'div.b-product-cost', 'p.b-product-cost__price');
 
     //MAISTER-OK
     $i = 8;
@@ -183,6 +185,8 @@ foreach ($array as $key => $elems) {
 
     //GARDENSHOP
     $i = 9;
+    $elems[$i] = getPrice ($elems, $i, 'span.the_prod_price');
+    /*
     if (strlen($elems[$i]) > 4) {
       $document = new Document(curlFunc($elems[$i]));
       $price = $document->first('span.the_prod_price');
@@ -195,6 +199,7 @@ foreach ($array as $key => $elems) {
     } else {
       $elems[$i] = "no href";
     }
+    */
 
     //TEHNARIK
     $i = 10;
@@ -214,23 +219,7 @@ foreach ($array as $key => $elems) {
 
     //TRADEHOUSE
     $i = 11;
-    $elems[$i] = "no href";
-    //Закоммитил 10/10/2023 так как на сайте нет наличии и выдавало ошибку
-    /*
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->find('div.b-product-cost');
-      $price = $document->first('*[^data-=product_price]');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
-    */
+    $elems[$i] = getPrice ($elems, $i, 'p.b-product-cost__price');
 
     //MOTOBLOK-24
     $i = 12;
@@ -239,19 +228,7 @@ foreach ($array as $key => $elems) {
 
     //VSE-MOTOBLOKI
     $i = 13;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->find('div.pc-product-purchase__add-to-cart');
-      $price = $document->first('span.woocommerce-Price-amount');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
+    $elems[$i] = getPrice ($elems, $i, 'span.woocommerce-Price-amount.amount');
 
     //AGRO_TOOLS
     $i = 14;
@@ -271,18 +248,7 @@ foreach ($array as $key => $elems) {
 
     //MOTOKOSMOS
     $i = 15;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->first('div.product-price');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
+    $elems[$i] = getPrice ($elems, $i, 'div.product-price', 'b.int');
 
     //MINIFERMER
     $i = 16;
@@ -317,8 +283,11 @@ foreach ($array as $key => $elems) {
 
     //AGROFAKTOR
     $i = 18;
-    $elems[$i] = "no site";
-    //$elems[$i] = getPrice ($elems, $i, 'div.t-store__prod-popup__price-item.t-name.t-name_md');
+    $elems[$i] = getPrice ($elems, $i, 'span.price__value.notranslate');
+
+    //AM.UA
+    $i = 19;
+    $elems[$i] = getPrice ($elems, $i, '.ty-price-num');
  
     //Запрос на внесение в таблицу строки данных по одному артикулу
     gSheetInsert($elems, $client);

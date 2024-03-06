@@ -12,6 +12,14 @@ function auditPrice($price_1, $price_2 = 999999, $price_3 = 999999) {
       if ($price_3 == NULL OR $price_3 == 0) {
         $price_3 = 999999;
       }
-      return min($price_1, $price_2, $price_3);
+
+      $num = min($price_1, $price_2, $price_3);
+      
+      if ($num == 999999) {
+        return "no_price";
+      } else {
+        return $num;
+      }
+
     }
   }

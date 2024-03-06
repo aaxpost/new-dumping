@@ -29,6 +29,7 @@ require ('function/gSheetRead.php');
 require ('function/gSheetInsert.php');
 require ('function/stringToNum.php');
 require ('function/auditPrice.php');
+require ('function/getPrice.php');
 //Загрузка зависимостей Google API
 require __DIR__ . '/vendor/autoload.php';
 
@@ -47,10 +48,13 @@ gSheetInsert([date(DATE_RFC822), 'Чернобрывец'], $client);
 //Подрібнювачі
 //$href = 'https://docs.google.com/spreadsheets/d/1t3mGM9aYTMN5UApPhhe2craUmKRfO1LNGsO-Kd-uTNg/edit#gid=1721330882';
 //Кит набори
-$href = 'https://docs.google.com/spreadsheets/d/1t3mGM9aYTMN5UApPhhe2craUmKRfO1LNGsO-Kd-uTNg/edit#gid=1979751587';
+//$href = 'https://docs.google.com/spreadsheets/d/1t3mGM9aYTMN5UApPhhe2craUmKRfO1LNGsO-Kd-uTNg/edit#gid=1979751587';
 //Чеснокосажалки
 //$href = 'https://docs.google.com/spreadsheets/d/1t3mGM9aYTMN5UApPhhe2craUmKRfO1LNGsO-Kd-uTNg/edit#gid=760290201';
-
+//Картоплесаджалки
+//$href = 'https://docs.google.com/spreadsheets/d/1t3mGM9aYTMN5UApPhhe2craUmKRfO1LNGsO-Kd-uTNg/edit#gid=0';
+//TEST
+$href = 'https://docs.google.com/spreadsheets/d/1t3mGM9aYTMN5UApPhhe2craUmKRfO1LNGsO-Kd-uTNg/edit#gid=2023262523';
 $array = gSheetRead($href);
 
 foreach ($array as $key => $elems) {
@@ -158,7 +162,10 @@ foreach ($array as $key => $elems) {
     }
 
     //https://teploreal.com.ua/*
+    //prom
     $i = 7;
+    $elems[$i] = getPrice ($elems, $i, 'p.b-product-cost__price');
+    /*
     if (strlen($elems[$i]) > 4) {
       $document = new Document(curlFunc($elems[$i]));
       //prom.ua
@@ -172,9 +179,12 @@ foreach ($array as $key => $elems) {
     } else {
       $elems[$i] = "no href";
     }
+    */
 
     //https://agro-club.com.ua/*
     $i = 8;
+    $elems[$i] = getPrice ($elems, $i, 'p.b-product-cost__price');
+    /*
     if (strlen($elems[$i]) > 4) {
       $document = new Document(curlFunc($elems[$i]));
       $price = $document->find('div.b-product-cost')[0]->first('*[^data-=product_price]')->text();
@@ -187,6 +197,7 @@ foreach ($array as $key => $elems) {
     } else {
       $elems[$i] = "no href";
     }
+    */
 
     //Запрос на внесение в таблицу строки данных по одному артикулу
     gSheetInsert($elems, $client);

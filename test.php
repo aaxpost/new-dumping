@@ -43,7 +43,7 @@ require __DIR__ . '/vendor/autoload.php';
         
 //$href = 'https://fermerplus.com.ua/ua/p787884282-drovokol-izmelchitel-vetok.html';
 //$href = 'https://agrotehnic.com.ua/ua/izmelchitel-vetok-drovokol-dlya-minitraktora-bez-konusa-odnostoronnyaya-zatochka-nozhej.html';
-$href = 'https://motoblok24.com.ua/drovokoly/tproduct/506651364-677832190351-drovokol-podrbnyuvach-glok-pd-motoblok-z';
+$href = 'https://romb.ua/ua/kartoplesadzhalka-lancjugova-premium-ks8.html';
 $elems = [$href];
 $i = 0;
 
@@ -58,10 +58,13 @@ function getPrice ($elems, $i, $pattern_1, $pattern_2 = '') {
     if (!empty($strHtml)) {
       $document = new Document($strHtml);
       if ($document->has($pattern_1)) {
+          //echo "has";
           if (strlen($pattern_2 > 4)) {
               $price = $document->find($pattern_1)[0]->first($pattern_2)->text();
+              //echo "1:".$price;
             } else {
               $price = $document->find($pattern_1)[0]->text();
+              //echo "2:".$price;
             }
       } else {
         $price = "error";
@@ -76,9 +79,68 @@ function getPrice ($elems, $i, $pattern_1, $pattern_2 = '') {
   return $price;
 }
 
-//echo "1:".getPrice ($elems, $i, 'span.autocalc-product-special');
-echo "2:".getPrice ($elems, $i, 'div.t-store__prod-popup__price-item.t-name.t-name_md');
 
+
+//echo "1:".getPrice ($elems, $i, 'span.autocalc-product-special');
+//echo "2:".getPrice ($elems, $i, 'div.t-store__prod-popup__price-item.t-name.t-name_md');
+$price_1 = getPrice ($elems, $i, 'div.price-box.price-final_price', 'span.price');
+//$price_2 = getPrice ($elems, $i, 'span.autocalc-product-special');
+
+echo auditPrice($price_1);
+
+/*
+// все ссылки
+$document->find('a');
+
+// любой элемент с id = "foo" и классом "bar"
+$document->find('#foo.bar');
+
+// любой элемент, у которого есть атрибут "name"
+$document->find('[name]');
+
+// эквивалентно
+$document->find('*[name]');
+
+// поле ввода с именем "foo"
+$document->find('input[name=foo]');
+$document->find('input[name=\'foo\']');
+$document->find('input[name="foo"]');
+
+// поле ввода с именем "foo" и значением "bar"
+$document->find('input[name="foo"][value="bar"]');
+
+// поле ввода, название которого НЕ равно "foo"
+$document->find('input[name!="foo"]');
+
+// любой элемент, у которого есть атрибут,
+// начинающийся с "data-" и равный "foo"
+$document->find('*[^data-=foo]');
+
+// все ссылки, у которых адрес начинается с https
+$document->find('a[href^=https]');
+
+// все изображения с расширением png
+$document->find('img[src$=png]');
+
+// все ссылки, содержащие в своем адресе строку "example.com"
+$document->find('a[href*=example.com]');
+
+// все ссылки, содержащие в атрибуте data-foo значение bar отделенное пробелом
+$document->find('a[data-foo~=bar]');
+
+// текст всех ссылок с классом "foo" (массив строк)
+$document->find('a.foo::text');
+
+// эквивалентно
+$document->find('a.foo::text()');
+
+// адрес и текст подсказки всех полей с классом "bar"
+$document->find('a.bar::attr(href|title)');
+
+// все ссылки, которые являются прямыми потомками текущего элемента
+$element->find('> a');
+
+*/
 
 
 

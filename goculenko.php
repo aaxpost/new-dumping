@@ -50,11 +50,13 @@ gSheetInsert([date(DATE_RFC822), 'Гоцуленко'], $client);
 //ТЕСТ
 //$href = 'https://docs.google.com/spreadsheets/d/1-15jXOYKGdQU00yHdQItbMHN23OEJjVsUlok-RsmLbs/edit#gid=299108438';
 //Кіт набори
-$href = 'https://docs.google.com/spreadsheets/d/1-15jXOYKGdQU00yHdQItbMHN23OEJjVsUlok-RsmLbs/edit#gid=501230981';
+//$href = 'https://docs.google.com/spreadsheets/d/1-15jXOYKGdQU00yHdQItbMHN23OEJjVsUlok-RsmLbs/edit#gid=501230981';
 //Чеснокосажалки
 //$href = 'https://docs.google.com/spreadsheets/d/1-15jXOYKGdQU00yHdQItbMHN23OEJjVsUlok-RsmLbs/edit#gid=1198811805';
 //ТЕСТ
 //$href = 'https://docs.google.com/spreadsheets/d/1-15jXOYKGdQU00yHdQItbMHN23OEJjVsUlok-RsmLbs/edit#gid=299108438';
+//Картоплесаджалки
+$href = 'https://docs.google.com/spreadsheets/d/1-15jXOYKGdQU00yHdQItbMHN23OEJjVsUlok-RsmLbs/edit#gid=0';
 
 $array = gSheetRead($href);
 
@@ -81,21 +83,7 @@ foreach ($array as $key => $elems) {
     
     //MOIMOTOBLOK*
     $i = 2;
-    $elems[$i] = "error";
-    /*
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->first('div.price');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
-    */
+    $elems[$i] = getPrice ($elems, $i, 'div.col-sm-4', 'span');
 
     //MOYA-FAZENDA*
     $i = 3;
@@ -134,7 +122,11 @@ foreach ($array as $key => $elems) {
 
     //Agrotehnik*
     $i = 6;
-    $elems[$i] = getPrice ($elems, $i, 'span.autocalc-product-special');
+    //Если не сайте используется несколько типов вывода цены, прописываю их, а потом фильтрую аудитом
+    $price_1 = getPrice ($elems, $i, 'span.autocalc-product-price');
+    $price_2 = getPrice ($elems, $i, 'span.autocalc-product-special');
+
+    $elems[$i] = auditPrice($price_1, $price_2);
    
     //Dokamir
     $i = 7;

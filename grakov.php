@@ -29,6 +29,7 @@ require ('function/gSheetRead.php');
 require ('function/gSheetInsert.php');
 require ('function/stringToNum.php');
 require ('function/auditPrice.php');
+require ('function/getPrice.php');
 //Загрузка зависимостей Google API
 require __DIR__ . '/vendor/autoload.php';
 
@@ -45,13 +46,13 @@ gSheetInsert([date(DATE_RFC822), 'Граков'], $client);
 
 //Считываю данные для парсинга из базового листа
 //Измельчители
-$href = 'https://docs.google.com/spreadsheets/d/1AKDsFSFQlI-mbH4rSRyXM3_78bCJdUGJoSkQIe6eFNo/edit#gid=1894254733';
+//$href = 'https://docs.google.com/spreadsheets/d/1AKDsFSFQlI-mbH4rSRyXM3_78bCJdUGJoSkQIe6eFNo/edit#gid=1894254733';
 //Кит наборы
 //$href = 'https://docs.google.com/spreadsheets/d/1AKDsFSFQlI-mbH4rSRyXM3_78bCJdUGJoSkQIe6eFNo/edit#gid=1516206833';
 //Часнокосажалки
 //$href = 'https://docs.google.com/spreadsheets/d/1AKDsFSFQlI-mbH4rSRyXM3_78bCJdUGJoSkQIe6eFNo/edit#gid=120254664';
 //ТЕСТ
-//$href = 'https://docs.google.com/spreadsheets/d/1AKDsFSFQlI-mbH4rSRyXM3_78bCJdUGJoSkQIe6eFNo/edit#gid=1061767132';
+$href = 'https://docs.google.com/spreadsheets/d/1AKDsFSFQlI-mbH4rSRyXM3_78bCJdUGJoSkQIe6eFNo/edit#gid=1061767132';
 
 $array = gSheetRead($href);
 
@@ -78,23 +79,11 @@ foreach ($array as $key => $elems) {
     
     //https://agrokram.com/*
     $i = 2;
-    $elems[$i] = "no code";
+    $elems[$i] = getPrice ($elems, $i, 'div.price-buy', 'div.price');
 
     //https://mototraktor.net/*
     $i = 3;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->find('div.b-product-cost');
-      $price = $document->first('*[^data-=product_price]');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
+    $elems[$i] = getPrice ($elems, $i, 'p.b-product-cost__price');
 
     //https://dnepr-traktor.net/*
     $i = 4;
@@ -156,19 +145,8 @@ foreach ($array as $key => $elems) {
 
     //https://agroambar.com/*
     $i = 7;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->first('p.catalog_item-price-actual');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
-
+    $elems[$i] = getPrice ($elems, $i, 'div.product-price-group', 'div.product-price');
+    
     //https://vladgreenline.com/*
     $i = 8;
     if (strlen($elems[$i]) > 4) {
@@ -203,20 +181,8 @@ foreach ($array as $key => $elems) {
 
     //https://romb.ua/*
     $i = 10;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->find('div.price-box.price-final_price');
-      $price = $document->first('span.price');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
-
+    $elems[$i] = getPrice ($elems, $i, 'div.price-box.price-final_price', 'span.price');
+    
     //https://avtogeshik.com.ua/*
     $i = 11;
     if (strlen($elems[$i]) > 4) {
@@ -234,18 +200,7 @@ foreach ($array as $key => $elems) {
 
     //https://mechanikus.com.ua/*
     $i = 12;
-    if (strlen($elems[$i]) > 4) {
-      $document = new Document(curlFunc($elems[$i]));
-      $price = $document->first('*[^data-=product_price]');
-      if ($price == NULL) {
-        $elems[$i] = "er href";
-      } else {
-        $price = stringToNum($price->text());
-        $elems[$i] = auditPrice($price);
-      }
-    } else {
-      $elems[$i] = "no href";
-    }
+    $elems[$i] = getPrice ($elems, $i, 'p.b-product-cost__price');
 
     //https://sklad310.com/*
     $i = 13;
